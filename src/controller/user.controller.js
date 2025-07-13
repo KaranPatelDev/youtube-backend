@@ -1,3 +1,4 @@
+import { User } from '../models/user.models.js';
 import { ApiError } from '../utils/apiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -41,8 +42,10 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
     // Step 4 : check for images and avatars
-    const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    // const avatarLocalPath = req.files?.avatar[0]?.path;
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    const avatarLocalPath = req.files && req.files.avatar && req.files.avatar[0] ? req.files.avatar[0].path : null;
+    const coverImageLocalPath = req.files && req.files.coverImage && req.files.coverImage[0] ? req.files.coverImage[0].path : null;
 
     if(!avatarLocalPath){
         throw new ApiError(400, 'Avatar is required');
