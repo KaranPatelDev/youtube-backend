@@ -6,7 +6,7 @@ import connectDB from "./db/index.js";
 dotenv.config({
     path: './env'
 })
-
+//"./env" this should throw error as our path is "./.env" but it is not throwing error because we are using dotenv package which is designed to load environment variables from a .env file into process.env. The path is relative to the current working directory, which is usually the root of your project.
 
 connectDB()
 .then(() => {
