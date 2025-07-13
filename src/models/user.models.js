@@ -66,12 +66,13 @@ userSchema.methods.comparePassword = async function(password) {
     return await bcrypt.compare(password, this.password);
 };
 
+
 userSchema.methods.generateAccessToken = function() {
     return jwt.sign(
         { 
             id: this._id,
             username: this.username,
-            fullName: this.fullname,
+            fullName: this.fullName,
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -80,12 +81,13 @@ userSchema.methods.generateAccessToken = function() {
     );
 }
 
+
 userSchema.methods.generateRefreshToken = function() {
     return jwt.sign(
         { 
             id: this._id,
             username: this.username,
-            fullName: this.fullname,
+            fullName: this.fullName,
         },
         process.env.REFRESH_TOKEN_SECRET,
         {
