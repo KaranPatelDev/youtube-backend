@@ -40,16 +40,24 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, 'Username or email already exists');
     }
 
+    // console.log(req.files);
+
 
     // Step 4 : check for images and avatars
     // const avatarLocalPath = req.files?.avatar[0]?.path;
     // const coverImageLocalPath = req.files?.coverImage[0]?.path;
     const avatarLocalPath = req.files && req.files.avatar && req.files.avatar[0] ? req.files.avatar[0].path : null;
-    const coverImageLocalPath = req.files && req.files.coverImage && req.files.coverImage[0] ? req.files.coverImage[0].path : null;
-
     if(!avatarLocalPath){
         throw new ApiError(400, 'Avatar is required');
     }
+// ====================================================
+    // const coverImageLocalPath = req.files && req.files.coverImage && req.files.coverImage[0] ? req.files.coverImage[0].path : null;
+// ----------------------OR----------------------------
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
+// ====================================================
 
 
     // Step 5 : if they are present, upload them to cloudinary
