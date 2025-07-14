@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { registerUser } from '../controller/user.controller.js';
+import { loginUser, registerUser } from '../controller/user.controller.js';
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
@@ -10,7 +10,14 @@ router.route('/register').post(
         { name: 'coverImage', maxCount: 1 }
     ]),
     registerUser
-);
+); // This is the middleware that handles the file upload
+
+
+router.route('/login').post(loginUser); // This route handles user login
+
+
+//SECURED ROUTES
+router.route('/logout').post(verifyJWT , logoutUser); // This route handles user logout
 
 
 export default router;
