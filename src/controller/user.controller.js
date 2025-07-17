@@ -213,7 +213,7 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
     try {
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET);
     
-        const user = await User.findById(decodedToken?._id);
+        const user = await User.findById(decodedToken?.id);
     
         if(!user){
             throw new ApiError(401, 'Invalid refresh token');
@@ -252,7 +252,7 @@ const changeCurrentPassword = asyncHandler(async (req, res) => {
     const { oldPassword, newPassword } = req.body;
 
     const user = await User.findById(req.user?._id);
-    const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
+    const isPasswordCorrect = await user.comparePassword(oldPassword)
     if(!isPasswordCorrect){
         throw new ApiError(400, 'Old password is Invalid');
     }
@@ -284,7 +284,7 @@ const updateAccountDetails = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Full name and email are required');
     }
 
-    User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         req.user._id,
         {
             $set: {
@@ -312,6 +312,8 @@ const updateUserAvatar = asyncHandler(async (req, res) => {
     if(!avatarLocalPath){
         throw new ApiError(400, 'Avatar is required');
     }
+
+    //  : delete old image - assignment
 
     const avatar = await uploadOnCloudinary(avatarLocalPath);
     if(!avatar.url){
@@ -344,7 +346,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         throw new ApiError(400, 'Cover image file is required');
     }
 
-    const coverImage = await uploadOnCloudinary(avatarLocalPath);
+    const coverImage = await uploadOnCloudinary(coverImageLocalPath);
     if(!coverImage.url){
         throw new ApiError(400, 'Error while uploading cover image');
     }
@@ -353,7 +355,7 @@ const updateUserCoverImage = asyncHandler(async (req, res) => {
         req.user._id,
         {
             $set: {
-                avatar: avatar.url,
+                coverImage: coverImage.url,
             }
         },
         {
