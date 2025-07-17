@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 import { User } from '../models/user.models.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
@@ -385,12 +386,14 @@ const getUserChannelProfile = asyncHandler(async (req, res) => {
         {
             $lookup: {
                 from: 'subscriptions',
-                localfield:'_id',
+                localField: '_id',
                 foreignField: 'channel',
                 as: 'subscribers'
-            },
+            }
+        },
+        {
             $lookup: {
-                from: 'videos',
+                from: 'subscriptions',
                 localField: '_id',
                 foreignField: 'subscriber',
                 as: 'subscribedTo'
